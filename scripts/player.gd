@@ -36,6 +36,11 @@ var _ghost_timer: float = 0.0
 func _ready() -> void:
 	current_hp = get_max_hp()
 	attack_cooldown_left = _effective_attack_interval() * 0.5
+	var gm: Node = get_node_or_null("/root/GameManager")
+	if gm != null and gm.has_method("get_selected_hero_texture"):
+		var hero_tex: Texture2D = gm.call("get_selected_hero_texture") as Texture2D
+		if hero_tex != null:
+			apply_hero_texture(hero_tex)
 	health_changed.emit(current_hp, get_max_hp())
 
 
@@ -82,6 +87,15 @@ func grant_max_hp(amount: int) -> void:
 	bonus_max_hp += amount
 	current_hp = mini(get_max_hp(), current_hp + amount)
 	health_changed.emit(current_hp, get_max_hp())
+
+
+func apply_hero_texture(tex: Texture2D) -> void:
+	if sprite == null or tex == null:
+		return
+	sprite.texture = tex
+	var h: float = maxf(1.0, float(tex.get_height()))
+	var scale_val: float = 42.0 / h
+	sprite.scale = Vector2(scale_val, scale_val)
 
 
 func take_damage(amount: int) -> bool:

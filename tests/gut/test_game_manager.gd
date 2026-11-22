@@ -54,3 +54,24 @@ func test_pause_menu_toggles_tree_pause() -> void:
 	pause_menu.set_paused(false)
 	assert_false(pause_menu.visible)
 	assert_false(get_tree().paused)
+
+
+func test_cycle_hero_wraps_and_loads_texture() -> void:
+	var gm: Node = GAME_MANAGER_SCRIPT.new()
+	gm.set("save_path", TEST_SAVE_PATH)
+	assert_eq(int(gm.call("cycle_hero", -1)), 7)
+	assert_eq(int(gm.call("cycle_hero", 1)), 0)
+	var tex: Texture2D = gm.call("get_selected_hero_texture") as Texture2D
+	assert_not_null(tex)
+	gm.free()
+
+
+func test_player_apply_hero_texture_scales_sprite_cleanly() -> void:
+	var player_scene: PackedScene = load("res://scenes/player.tscn") as PackedScene
+	var player: Player = player_scene.instantiate() as Player
+	add_child_autofree(player)
+	var tex: Texture2D = load("res://assets/custom/heroes/hero_0.png") as Texture2D
+	assert_not_null(tex)
+	player.apply_hero_texture(tex)
+	assert_eq(player.sprite.texture, tex)
+	assert_almost_eq(player.sprite.scale.y, 42.0 / float(tex.get_height()), 0.01)

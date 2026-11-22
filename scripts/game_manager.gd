@@ -3,6 +3,7 @@ extends Node
 signal high_score_changed(new_high_score: int)
 signal bgm_toggled(enabled: bool)
 signal achievement_unlocked(achievement_id: String, title: String)
+signal hero_changed(hero_index: int, hero_name: String)
 
 const DEFAULT_SAVE_PATH: String = "user://high_score.cfg"
 const TITLE_SCENE_PATH: String = "res://scenes/title.tscn"
@@ -12,6 +13,16 @@ const ACHIEVEMENT_DEFS: Array[Dictionary] = [
 	{"id": "boss_slayer", "title": "네크로 슬레이어 (Boss Slayer)"},
 	{"id": "combo_master", "title": "콤보 마스터 (Combo x4)"},
 	{"id": "veteran_knight", "title": "고대 기사 (Lv.3 달성)"},
+]
+const HERO_DEFS: Array[Dictionary] = [
+	{"id": "paladin", "name": "발키리 성기사", "path": "res://assets/custom/heroes/hero_0.png"},
+	{"id": "rogue", "name": "그림자 도적", "path": "res://assets/custom/heroes/hero_1.png"},
+	{"id": "mage", "name": "별빛 마법사", "path": "res://assets/custom/heroes/hero_2.png"},
+	{"id": "ranger", "name": "숲의 레인저", "path": "res://assets/custom/heroes/hero_3.png"},
+	{"id": "cleric", "name": "태양 성직자", "path": "res://assets/custom/heroes/hero_4.png"},
+	{"id": "berserker", "name": "드래곤 광전사", "path": "res://assets/custom/heroes/hero_5.png"},
+	{"id": "alchemist", "name": "던전 연금술사", "path": "res://assets/custom/heroes/hero_6.png"},
+	{"id": "necromancer", "name": "소울 네크로맨서", "path": "res://assets/custom/heroes/hero_7.png"},
 ]
 
 var save_path: String = DEFAULT_SAVE_PATH
@@ -23,6 +34,7 @@ var has_played_run: bool = false
 var bgm_enabled: bool = true
 var total_kills: int = 0
 var boss_kills: int = 0
+var selected_hero_index: int = 0
 var unlocked_achievements: Array[String] = []
 var _keepalive_player: AudioStreamPlayer
 var _bgm_player: AudioStreamPlayer
@@ -47,11 +59,17 @@ func load_high_score() -> int:
 		high_score = 0
 		total_kills = 0
 		boss_kills = 0
+		selected_hero_index = 0
 		unlocked_achievements.clear()
 		return high_score
 	high_score = int(config.get_value("records", "high_score", 0))
 	total_kills = int(config.get_value("records", "total_kills", 0))
 	boss_kills = int(config.get_value("records", "boss_kills", 0))
+	selected_hero_index = clampi(
+		int(config.get_value("records", "selected_hero_index", 0)),
+		0,
+		HERO_DEFS.size() - 1
+	)
 	unlocked_achievements.clear()
 	var saved_ach: Array = config.get_value("records", "achievements", []) as Array
 	for item in saved_ach:
@@ -64,6 +82,7 @@ func save_high_score(new_score: int) -> void:
 	config.set_value("records", "high_score", new_score)
 	config.set_value("records", "total_kills", total_kills)
 	config.set_value("records", "boss_kills", boss_kills)
+	config.set_value("records", "selected_hero_index", selected_hero_index)
 	config.set_value("records", "achievements", unlocked_achievements)
 	config.save(save_path)
 
@@ -124,6 +143,27 @@ func get_achievement_summary() -> String:
 		total_kills,
 		boss_kills,
 	]
+
+
+func set_selected_hero(index: int) -> void:
+	var count: int = HERO_DEFS.size()
+	selected_hero_index = ((index % count) + count) % count
+	save_high_score(high_score)
+	hero_changed.emit(selected_hero_index, get_selected_hero_name())
+
+
+func cycle_hero(step: int) -> int:
+	set_selected_hero(selected_hero_index + step)
+	return selected_hero_index
+
+
+func get_selected_hero_name() -> String:
+	return str(HERO_DEFS[selected_hero_index].get("name", "발키리 성기사"))
+
+
+func get_selected_hero_texture() -> Texture2D:
+	var tex_path: String = str(HERO_DEFS[selected_hero_index].get("path", ""))
+	return load(tex_path) as Texture2D
 
 
 func set_bgm_enabled(enabled: bool) -> void:

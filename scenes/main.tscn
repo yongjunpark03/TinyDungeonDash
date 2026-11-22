@@ -11,12 +11,12 @@
 [ext_resource type="Script" uid="uid://cjm5kmanj5x22" path="res://scripts/pause_menu.gd" id="8_pause"]
 [ext_resource type="PackedScene" path="res://scenes/slash_projectile.tscn" id="9_slash"]
 [ext_resource type="PackedScene" path="res://scenes/xp_gem.tscn" id="10_xp_gem"]
-[ext_resource type="Script" path="res://scripts/level_up_menu.gd" id="11_level_up"]
-[ext_resource type="Texture2D" path="res://assets/custom/upgrade_crest.png" id="12_crest"]
+[ext_resource type="Script" uid="uid://cjclrpmhk48u1" path="res://scripts/level_up_menu.gd" id="11_level_up"]
+[ext_resource type="Texture2D" uid="uid://b8hfvcjyhk1sx" path="res://assets/custom/upgrade_crest.png" id="12_crest"]
 [ext_resource type="PackedScene" path="res://scenes/magic_orb.tscn" id="13_magic_orb"]
 [ext_resource type="Resource" path="res://resources/enemy_boss.tres" id="14_boss"]
-[ext_resource type="Shader" path="res://shaders/torch_vignette.gdshader" id="15_torch"]
-[ext_resource type="Script" path="res://scripts/touch_controls.gd" id="16_touch"]
+[ext_resource type="Shader" uid="uid://l4xtnh8sjrei" path="res://shaders/torch_vignette.gdshader" id="15_torch"]
+[ext_resource type="Script" uid="uid://0a8n4svmir4b" path="res://scripts/touch_controls.gd" id="16_touch"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_torch_vignette"]
 shader = ExtResource("15_torch")
@@ -46,7 +46,7 @@ position = Vector2(576, 324)
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1514219318]
 
-[node name="TorchVignette" type="ColorRect" parent="HUD"]
+[node name="TorchVignette" type="ColorRect" parent="HUD" unique_id=1413825633]
 material = SubResource("ShaderMaterial_torch_vignette")
 anchors_preset = 15
 anchor_right = 1.0
@@ -128,7 +128,7 @@ theme_override_font_sizes/font_size = 24
 text = "Wave 1 | Combo x1"
 horizontal_alignment = 2
 
-[node name="LevelLabel" type="Label" parent="HUD/TopMargin/TopBar/RightStats"]
+[node name="LevelLabel" type="Label" parent="HUD/TopMargin/TopBar/RightStats" unique_id=1743444227]
 modulate = Color(0.45, 1, 0.75, 1)
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -146,27 +146,27 @@ theme_override_font_sizes/font_size = 16
 text = "[Esc] Pause  |  [M] BGM"
 horizontal_alignment = 2
 
-[node name="MobileActionsRow" type="HBoxContainer" parent="HUD/TopMargin/TopBar/RightStats"]
+[node name="MobileActionsRow" type="HBoxContainer" parent="HUD/TopMargin/TopBar/RightStats" unique_id=99738604]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 alignment = 2
 
-[node name="BgmButton" type="Button" parent="HUD/TopMargin/TopBar/RightStats/MobileActionsRow"]
+[node name="BgmButton" type="Button" parent="HUD/TopMargin/TopBar/RightStats/MobileActionsRow" unique_id=362974873]
 custom_minimum_size = Vector2(104, 36)
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 15
 text = "BGM: ON"
 
-[node name="PauseButton" type="Button" parent="HUD/TopMargin/TopBar/RightStats/MobileActionsRow"]
+[node name="PauseButton" type="Button" parent="HUD/TopMargin/TopBar/RightStats/MobileActionsRow" unique_id=1849018387]
 custom_minimum_size = Vector2(104, 36)
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 15
 text = "일시정지"
 
-[node name="TouchControls" type="Control" parent="HUD"]
+[node name="TouchControls" type="Control" parent="HUD" unique_id=66513140]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -176,7 +176,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("16_touch")
 
-[node name="BossBarPanel" type="PanelContainer" parent="HUD"]
+[node name="BossBarPanel" type="PanelContainer" parent="HUD" unique_id=2044287594]
 visible = false
 anchors_preset = 5
 anchor_left = 0.5
@@ -188,7 +188,7 @@ offset_bottom = 78.0
 grow_horizontal = 2
 mouse_filter = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="HUD/BossBarPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="HUD/BossBarPanel" unique_id=112429307]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 12
@@ -196,12 +196,12 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HUD/BossBarPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/BossBarPanel/MarginContainer" unique_id=542480602]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="BossNameLabel" type="Label" parent="HUD/BossBarPanel/MarginContainer/VBoxContainer"]
+[node name="BossNameLabel" type="Label" parent="HUD/BossBarPanel/MarginContainer/VBoxContainer" unique_id=1825157571]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.45, 0.55, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -210,7 +210,7 @@ theme_override_font_sizes/font_size = 18
 text = "BOSS: Necro Lord (10 / 10)"
 horizontal_alignment = 1
 
-[node name="BossHpBar" type="ProgressBar" parent="HUD/BossBarPanel/MarginContainer/VBoxContainer"]
+[node name="BossHpBar" type="ProgressBar" parent="HUD/BossBarPanel/MarginContainer/VBoxContainer" unique_id=277265764]
 custom_minimum_size = Vector2(340, 16)
 layout_mode = 2
 mouse_filter = 2
@@ -284,7 +284,7 @@ size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 22
 text = "타이틀로"
 
-[node name="LevelUpOverlay" type="Control" parent="HUD"]
+[node name="LevelUpOverlay" type="Control" parent="HUD" unique_id=496359677]
 process_mode = 3
 visible = false
 layout_mode = 3
@@ -295,7 +295,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("11_level_up")
 
-[node name="Dim" type="ColorRect" parent="HUD/LevelUpOverlay"]
+[node name="Dim" type="ColorRect" parent="HUD/LevelUpOverlay" unique_id=326517391]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -304,7 +304,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.03, 0.04, 0.08, 0.72)
 
-[node name="CenterContainer" type="CenterContainer" parent="HUD/LevelUpOverlay"]
+[node name="CenterContainer" type="CenterContainer" parent="HUD/LevelUpOverlay" unique_id=1514442109]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -312,23 +312,23 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="HUD/LevelUpOverlay/CenterContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="HUD/LevelUpOverlay/CenterContainer" unique_id=708555776]
 custom_minimum_size = Vector2(540, 380)
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer" unique_id=27675402]
 layout_mode = 2
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer" unique_id=843281926]
 layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="CrestIcon" type="TextureRect" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="CrestIcon" type="TextureRect" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1484782448]
 texture_filter = 1
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
@@ -337,7 +337,7 @@ texture = ExtResource("12_crest")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="LevelUpTitle" type="Label" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="LevelUpTitle" type="Label" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1601620831]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.88, 0.35, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -346,25 +346,25 @@ theme_override_font_sizes/font_size = 30
 text = "LEVEL UP! (Lv.2)"
 horizontal_alignment = 1
 
-[node name="LevelUpSubtitle" type="Label" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="LevelUpSubtitle" type="Label" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=113475367]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "강화할 스킬 카드를 선택하세요"
 horizontal_alignment = 1
 
-[node name="CardButton1" type="Button" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="CardButton1" type="Button" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1860659574]
 custom_minimum_size = Vector2(460, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 17
 text = "Card 1"
 
-[node name="CardButton2" type="Button" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="CardButton2" type="Button" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=606547641]
 custom_minimum_size = Vector2(460, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 17
 text = "Card 2"
 
-[node name="CardButton3" type="Button" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="CardButton3" type="Button" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=439955345]
 custom_minimum_size = Vector2(460, 64)
 layout_mode = 2
 theme_override_font_sizes/font_size = 17
