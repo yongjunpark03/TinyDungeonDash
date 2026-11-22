@@ -132,7 +132,6 @@ func _play_sfx(stream: AudioStreamWAV) -> void:
 func _start_audio_keepalive() -> void:
 	var keepalive: AudioStreamPlayer = AudioStreamPlayer.new()
 	keepalive.stream = SfxFactory.create_keepalive()
-	keepalive.volume_db = -40.0
 	add_child(keepalive)
 	keepalive.play()
 
