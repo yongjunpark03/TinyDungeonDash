@@ -48,7 +48,7 @@ func _refresh_hero_preview() -> void:
 		hero_preview.texture = tex
 	var idx: int = int(gm.get("selected_hero_index")) + 1
 	var hero_name: String = str(gm.call("get_selected_hero_name"))
-	hero_name_label.text = "캐릭터: %s (%d / 8)" % [hero_name, idx]
+	hero_name_label.text = "캐릭터: %s (%d / 6)" % [hero_name, idx]
 
 
 func _on_prev_hero_pressed() -> void:

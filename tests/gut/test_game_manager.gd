@@ -59,7 +59,7 @@ func test_pause_menu_toggles_tree_pause() -> void:
 func test_cycle_hero_wraps_and_loads_texture() -> void:
 	var gm: Node = GAME_MANAGER_SCRIPT.new()
 	gm.set("save_path", TEST_SAVE_PATH)
-	assert_eq(int(gm.call("cycle_hero", -1)), 7)
+	assert_eq(int(gm.call("cycle_hero", -1)), 5)
 	assert_eq(int(gm.call("cycle_hero", 1)), 0)
 	var tex: Texture2D = gm.call("get_selected_hero_texture") as Texture2D
 	assert_not_null(tex)

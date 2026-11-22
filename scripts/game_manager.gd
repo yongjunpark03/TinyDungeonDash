@@ -15,14 +15,12 @@ const ACHIEVEMENT_DEFS: Array[Dictionary] = [
 	{"id": "veteran_knight", "title": "고대 기사 (Lv.3 달성)"},
 ]
 const HERO_DEFS: Array[Dictionary] = [
-	{"id": "paladin", "name": "발키리 성기사", "path": "res://assets/custom/heroes/hero_0.png"},
-	{"id": "rogue", "name": "그림자 도적", "path": "res://assets/custom/heroes/hero_1.png"},
-	{"id": "mage", "name": "별빛 마법사", "path": "res://assets/custom/heroes/hero_2.png"},
-	{"id": "ranger", "name": "숲의 레인저", "path": "res://assets/custom/heroes/hero_3.png"},
-	{"id": "cleric", "name": "태양 성직자", "path": "res://assets/custom/heroes/hero_4.png"},
-	{"id": "berserker", "name": "드래곤 광전사", "path": "res://assets/custom/heroes/hero_5.png"},
-	{"id": "alchemist", "name": "던전 연금술사", "path": "res://assets/custom/heroes/hero_6.png"},
-	{"id": "necromancer", "name": "소울 네크로맨서", "path": "res://assets/custom/heroes/hero_7.png"},
+	{"id": "knight", "name": "던전 기사 (오리지널)", "path": "res://assets/kenney_tiny_dungeon/Tiles/tile_0097.png"},
+	{"id": "valkyrie", "name": "발키리", "path": "res://assets/custom/heroes/hero_0.png"},
+	{"id": "mage", "name": "마법사", "path": "res://assets/custom/heroes/hero_1.png"},
+	{"id": "rogue", "name": "도적", "path": "res://assets/custom/heroes/hero_2.png"},
+	{"id": "amazon", "name": "아마존", "path": "res://assets/custom/heroes/hero_3.png"},
+	{"id": "villager", "name": "마을 주민", "path": "res://assets/custom/heroes/hero_4.png"},
 ]
 
 var save_path: String = DEFAULT_SAVE_PATH
