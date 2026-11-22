@@ -1,10 +1,18 @@
 [gd_scene format=3 uid="uid://10ufthk4i5s4"]
 
-[ext_resource type="Texture2D" uid="uid://dyxbmyvpkkcvs" path="res://addons/gut/images/GutIconV2_base.png" id="1_7p1mj"]
+[ext_resource type="Texture2D" path="res://assets/kenney_tiny_dungeon/Tiles/tile_0110.png" id="1_monster"]
 [ext_resource type="Script" uid="uid://is542ld62ge4" path="res://scripts/enemy.gd" id="1_md0e3"]
+[ext_resource type="Shader" path="res://shaders/dissolve.gdshader" id="2_dissolve"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_snpeb"]
 radius = 14.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dissolve"]
+resource_local_to_scene = true
+shader = ExtResource("2_dissolve")
+shader_parameter/flash_amount = 0.0
+shader_parameter/dissolve_amount = 0.0
+shader_parameter/edge_color = Color(1, 0.5, 0.15, 1)
 
 [node name="Enemy" type="Area2D" unique_id=1097119050]
 script = ExtResource("1_md0e3")
@@ -13,5 +21,7 @@ script = ExtResource("1_md0e3")
 shape = SubResource("CircleShape2D_snpeb")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=901886153]
-scale = Vector2(0.022, 0.022)
-texture = ExtResource("1_7p1mj")
+texture_filter = 1
+material = SubResource("ShaderMaterial_dissolve")
+scale = Vector2(2.4, 2.4)
+texture = ExtResource("1_monster")

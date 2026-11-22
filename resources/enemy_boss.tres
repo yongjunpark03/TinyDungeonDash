@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_data.gd" id="1_enemy_data"]
+[ext_resource type="Texture2D" path="res://assets/kenney_tiny_dungeon/Tiles/tile_0121.png" id="2_boss"]
+
+[resource]
+script = ExtResource("1_enemy_data")
+display_name = "Necro Lord"
+behavior = 1
+speed = 88.0
+damage = 1
+max_hp = 10
+score_value = 15
+texture = ExtResource("2_boss")

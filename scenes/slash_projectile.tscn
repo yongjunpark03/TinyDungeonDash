@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/slash_projectile.gd" id="1_slash_script"]
+[ext_resource type="Texture2D" path="res://assets/custom/slash_arc.png" id="2_slash_tex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_slash"]
+radius = 18.0
+
+[node name="SlashProjectile" type="Area2D"]
+script = ExtResource("1_slash_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_slash")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(2, 2)
+texture = ExtResource("2_slash_tex")

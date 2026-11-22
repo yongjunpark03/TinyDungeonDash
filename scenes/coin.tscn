@@ -1,10 +1,17 @@
 [gd_scene format=3 uid="uid://c1og7w6bp6rq8"]
 
 [ext_resource type="Script" uid="uid://cawi7a0fbfth" path="res://scripts/coin.gd" id="1_i64fm"]
-[ext_resource type="Texture2D" uid="uid://cjs6k5v8mfl44" path="res://icon.svg" id="1_rwqht"]
+[ext_resource type="Texture2D" path="res://assets/kenney_tiny_dungeon/Tiles/tile_0089.png" id="2_chest"]
+[ext_resource type="Shader" path="res://shaders/chest_glow.gdshader" id="3_glow"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_snpeb"]
 radius = 14.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_chest_glow"]
+shader = ExtResource("3_glow")
+shader_parameter/glow_color = Color(1, 0.88, 0.25, 1)
+shader_parameter/pulse_speed = 4.0
+shader_parameter/shimmer_strength = 0.22
 
 [node name="Coin" type="Area2D" unique_id=548119960]
 script = ExtResource("1_i64fm")
@@ -13,7 +20,7 @@ script = ExtResource("1_i64fm")
 shape = SubResource("CircleShape2D_snpeb")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=2076144633]
-modulate = Color(1, 1, 0, 1)
-self_modulate = Color(1, 1, 0, 1)
-scale = Vector2(0.18, 0.18)
-texture = ExtResource("1_rwqht")
+texture_filter = 1
+material = SubResource("ShaderMaterial_chest_glow")
+scale = Vector2(2.2, 2.2)
+texture = ExtResource("2_chest")

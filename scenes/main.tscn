@@ -5,57 +5,419 @@
 [ext_resource type="PackedScene" uid="uid://c1og7w6bp6rq8" path="res://scenes/coin.tscn" id="2_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://10ufthk4i5s4" path="res://scenes/enemy.tscn" id="4_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://dyw8poci03m25" path="res://scenes/coin_burst.tscn" id="4_tbgi4"]
+[ext_resource type="PackedScene" path="res://scenes/dungeon_map.tscn" id="5_dungeon"]
+[ext_resource type="Resource" path="res://resources/enemy_bat.tres" id="6_bat"]
+[ext_resource type="Resource" path="res://resources/enemy_slime.tres" id="7_slime"]
+[ext_resource type="Script" uid="uid://cjm5kmanj5x22" path="res://scripts/pause_menu.gd" id="8_pause"]
+[ext_resource type="PackedScene" path="res://scenes/slash_projectile.tscn" id="9_slash"]
+[ext_resource type="PackedScene" path="res://scenes/xp_gem.tscn" id="10_xp_gem"]
+[ext_resource type="Script" path="res://scripts/level_up_menu.gd" id="11_level_up"]
+[ext_resource type="Texture2D" path="res://assets/custom/upgrade_crest.png" id="12_crest"]
+[ext_resource type="PackedScene" path="res://scenes/magic_orb.tscn" id="13_magic_orb"]
+[ext_resource type="Resource" path="res://resources/enemy_boss.tres" id="14_boss"]
+[ext_resource type="Shader" path="res://shaders/torch_vignette.gdshader" id="15_torch"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_torch_vignette"]
+shader = ExtResource("15_torch")
+shader_parameter/light_uv = Vector2(0.5, 0.5)
+shader_parameter/torch_radius = 0.34
+shader_parameter/darkness = 0.52
+shader_parameter/flicker_speed = 7.5
+shader_parameter/torch_tint = Color(1, 0.62, 0.22, 1)
+shader_parameter/shadow_color = Color(0.03, 0.03, 0.08, 1)
 
 [node name="Main" type="Node2D" unique_id=271756234]
 script = ExtResource("1_0wfyh")
 coin_scene = ExtResource("2_0wfyh")
 enemy_scene = ExtResource("4_jyhfs")
 coin_burst_scene = ExtResource("4_tbgi4")
+slash_scene = ExtResource("9_slash")
+xp_gem_scene = ExtResource("10_xp_gem")
+magic_orb_scene = ExtResource("13_magic_orb")
+bat_data = ExtResource("6_bat")
+slime_data = ExtResource("7_slime")
+boss_data = ExtResource("14_boss")
+
+[node name="DungeonMap" parent="." unique_id=1586747495 instance=ExtResource("5_dungeon")]
 
 [node name="Player" parent="." unique_id=1523959715 instance=ExtResource("1_player_scene")]
 position = Vector2(576, 324)
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1514219318]
 
-[node name="ScoreLabel" type="Label" parent="HUD" unique_id=806943648]
-offset_left = 20.0
-offset_top = 20.0
-offset_right = 81.0
-offset_bottom = 43.0
+[node name="TorchVignette" type="ColorRect" parent="HUD"]
+material = SubResource("ShaderMaterial_torch_vignette")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopMargin" type="MarginContainer" parent="HUD" unique_id=560128367]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 210.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 0
+
+[node name="TopBar" type="HBoxContainer" parent="HUD/TopMargin" unique_id=1291323530]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="LeftStats" type="VBoxContainer" parent="HUD/TopMargin/TopBar" unique_id=205460952]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="ScoreLabel" type="Label" parent="HUD/TopMargin/TopBar/LeftStats" unique_id=806943648]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 28
 text = "Score: 0"
 
-[node name="TimeLabel" type="Label" parent="HUD" unique_id=1266326690]
-offset_left = 20.0
-offset_top = 60.0
-offset_right = 85.0
-offset_bottom = 83.0
+[node name="TimeLabel" type="Label" parent="HUD/TopMargin/TopBar/LeftStats" unique_id=1266326690]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 28
-text = "Time: 20"
+text = "Time: 30"
 
-[node name="RestartButton" type="Button" parent="HUD" unique_id=540834070]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -38.5
-offset_top = -15.5
-offset_right = 38.5
-offset_bottom = 15.5
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 24
-text = "다시 시작"
-
-[node name="BestLabel" type="Label" parent="HUD" unique_id=511146224]
+[node name="BestLabel" type="Label" parent="HUD/TopMargin/TopBar/LeftStats" unique_id=511146224]
 modulate = Color(1, 1, 0, 1)
-offset_left = 20.0
-offset_top = 100.0
-offset_right = 72.0
-offset_bottom = 123.0
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 24
 text = "Best: 0"
+
+[node name="DashLabel" type="Label" parent="HUD/TopMargin/TopBar/LeftStats" unique_id=1112273039]
+modulate = Color(0.55, 0.95, 1, 1)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "Dash [Space]: READY"
+
+[node name="HpLabel" type="Label" parent="HUD/TopMargin/TopBar/LeftStats" unique_id=1145633880]
+modulate = Color(1, 0.45, 0.45, 1)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 22
+text = "HP: 3 / 3"
+
+[node name="RightStats" type="VBoxContainer" parent="HUD/TopMargin/TopBar" unique_id=442489536]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="WaveLabel" type="Label" parent="HUD/TopMargin/TopBar/RightStats" unique_id=444705363]
+modulate = Color(1, 0.85, 0.35, 1)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 24
+text = "Wave 1 | Combo x1"
+horizontal_alignment = 2
+
+[node name="LevelLabel" type="Label" parent="HUD/TopMargin/TopBar/RightStats"]
+modulate = Color(0.45, 1, 0.75, 1)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "Lv.1 | XP 0 / 3"
+horizontal_alignment = 2
+
+[node name="PauseHintLabel" type="Label" parent="HUD/TopMargin/TopBar/RightStats" unique_id=2046574915]
+modulate = Color(0.9, 0.9, 0.95, 0.85)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 16
+text = "[Esc] Pause  |  [M] BGM"
+horizontal_alignment = 2
+
+[node name="BossBarPanel" type="PanelContainer" parent="HUD"]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -190.0
+offset_top = 16.0
+offset_right = 190.0
+offset_bottom = 78.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD/BossBarPanel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/BossBarPanel/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="BossNameLabel" type="Label" parent="HUD/BossBarPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.45, 0.55, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 18
+text = "BOSS: Necro Lord (10 / 10)"
+horizontal_alignment = 1
+
+[node name="BossHpBar" type="ProgressBar" parent="HUD/BossBarPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(340, 16)
+layout_mode = 2
+mouse_filter = 2
+max_value = 10.0
+value = 10.0
+show_percentage = false
+
+[node name="PauseOverlay" type="Control" parent="HUD" unique_id=1911094336]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("8_pause")
+
+[node name="Dim" type="ColorRect" parent="HUD/PauseOverlay" unique_id=308557049]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="CenterContainer" type="CenterContainer" parent="HUD/PauseOverlay" unique_id=1325268556]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="HUD/PauseOverlay/CenterContainer" unique_id=1479182048]
+custom_minimum_size = Vector2(360, 240)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD/PauseOverlay/CenterContainer/PanelContainer" unique_id=1178605277]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/PauseOverlay/CenterContainer/PanelContainer/MarginContainer" unique_id=1863308857]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="PauseTitle" type="Label" parent="HUD/PauseOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=860864890]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 34
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="HUD/PauseOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=23560172]
+custom_minimum_size = Vector2(220, 46)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 22
+text = "계속하기"
+
+[node name="TitleButton" type="Button" parent="HUD/PauseOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=180838953]
+custom_minimum_size = Vector2(220, 46)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 22
+text = "타이틀로"
+
+[node name="LevelUpOverlay" type="Control" parent="HUD"]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("11_level_up")
+
+[node name="Dim" type="ColorRect" parent="HUD/LevelUpOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.03, 0.04, 0.08, 0.72)
+
+[node name="CenterContainer" type="CenterContainer" parent="HUD/LevelUpOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="HUD/LevelUpOverlay/CenterContainer"]
+custom_minimum_size = Vector2(540, 380)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="CrestIcon" type="TextureRect" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("12_crest")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LevelUpTitle" type="Label" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.88, 0.35, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 30
+text = "LEVEL UP! (Lv.2)"
+horizontal_alignment = 1
+
+[node name="LevelUpSubtitle" type="Label" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "강화할 스킬 카드를 선택하세요"
+horizontal_alignment = 1
+
+[node name="CardButton1" type="Button" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(460, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Card 1"
+
+[node name="CardButton2" type="Button" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(460, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Card 2"
+
+[node name="CardButton3" type="Button" parent="HUD/LevelUpOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(460, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Card 3"
+
+[node name="ResultOverlay" type="Control" parent="HUD" unique_id=579443460]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="HUD/ResultOverlay" unique_id=2051302662]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="CenterContainer" type="CenterContainer" parent="HUD/ResultOverlay" unique_id=870329972]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="HUD/ResultOverlay/CenterContainer" unique_id=282701119]
+custom_minimum_size = Vector2(460, 300)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD/ResultOverlay/CenterContainer/PanelContainer" unique_id=647104450]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 28
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/ResultOverlay/CenterContainer/PanelContainer/MarginContainer" unique_id=733846541]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="ResultTitle" type="Label" parent="HUD/ResultOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1910276383]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 34
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="ResultSummaryLabel" type="Label" parent="HUD/ResultOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=363813559]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Score: 0  |  Wave: 1"
+horizontal_alignment = 1
+
+[node name="ResultBestLabel" type="Label" parent="HUD/ResultOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=498933156]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0.35, 1)
+theme_override_font_sizes/font_size = 20
+text = "Best: 0"
+horizontal_alignment = 1
+
+[node name="ButtonsRow" type="HBoxContainer" parent="HUD/ResultOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1193322732]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="RestartButton" type="Button" parent="HUD/ResultOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonsRow" unique_id=540834070]
+custom_minimum_size = Vector2(170, 46)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "다시 시작"
+
+[node name="ResultTitleButton" type="Button" parent="HUD/ResultOverlay/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonsRow" unique_id=2042020769]
+custom_minimum_size = Vector2(170, 46)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "타이틀로"
 
 [node name="GameTimer" type="Timer" parent="." unique_id=359748678]
 

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_data.gd" id="1_enemy_data"]
+[ext_resource type="Texture2D" path="res://assets/kenney_tiny_dungeon/Tiles/tile_0120.png" id="2_bat"]
+
+[resource]
+script = ExtResource("1_enemy_data")
+display_name = "Dungeon Bat"
+behavior = 0
+speed = 195.0
+damage = 1
+max_hp = 1
+score_value = 2
+texture = ExtResource("2_bat")
