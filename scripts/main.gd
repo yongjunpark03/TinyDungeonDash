@@ -46,6 +46,9 @@ var _active_boss: Enemy
 @onready var hp_label: Label = $HUD/TopMargin/TopBar/LeftStats/HpLabel
 @onready var wave_label: Label = $HUD/TopMargin/TopBar/RightStats/WaveLabel
 @onready var level_label: Label = $HUD/TopMargin/TopBar/RightStats/LevelLabel
+@onready var bgm_button: Button = $HUD/TopMargin/TopBar/RightStats/MobileActionsRow/BgmButton
+@onready var pause_button: Button = $HUD/TopMargin/TopBar/RightStats/MobileActionsRow/PauseButton
+@onready var touch_controls: TouchControls = $HUD/TouchControls
 @onready var torch_vignette: ColorRect = $HUD/TorchVignette
 @onready var boss_bar_panel: PanelContainer = $HUD/BossBarPanel
 @onready var boss_name_label: Label = $HUD/BossBarPanel/MarginContainer/VBoxContainer/BossNameLabel
@@ -94,6 +97,10 @@ func _ready() -> void:
 	pause_overlay.can_pause = true
 	pause_overlay.title_requested.connect(_on_title_pressed)
 	level_up_overlay.upgrade_selected.connect(_on_upgrade_selected)
+	bgm_button.pressed.connect(_on_bgm_button_pressed)
+	pause_button.pressed.connect(_on_pause_button_pressed)
+	touch_controls.move_vector_changed.connect(_on_touch_move_changed)
+	touch_controls.dash_pressed.connect(_on_touch_dash_pressed)
 	restart_button.pressed.connect(_on_restart_pressed)
 	result_title_button.pressed.connect(_on_title_pressed)
 	game_timer.timeout.connect(_on_game_timer_timeout)
@@ -289,6 +296,8 @@ func _gain_xp(xp_amount: int) -> void:
 		_try_unlock_achievement("veteran_knight")
 	if gained > 0 and not is_game_over:
 		_play_sfx(levelup_sfx)
+		touch_controls.reset_touch_state()
+		player.external_move_input = Vector2.ZERO
 		pause_overlay.can_pause = false
 		level_up_overlay.present_choices(upgrade_manager.level, upgrade_manager.roll_choices(3))
 
@@ -351,13 +360,40 @@ func _on_player_dash_started() -> void:
 	_play_sfx(dash_sfx)
 
 
-func _on_dash_cooldown_changed(remaining: float, _duration: float) -> void:
+func _on_dash_cooldown_changed(remaining: float, duration: float) -> void:
+	if touch_controls != null:
+		touch_controls.dash_cooldown_ratio = clampf(remaining / maxf(0.01, duration), 0.0, 1.0)
+		touch_controls.queue_redraw()
 	if remaining <= 0.0:
 		dash_label.text = "Dash [Space]: READY"
 		dash_label.modulate = Color(0.55, 0.95, 1.0, 1.0)
 	else:
 		dash_label.text = "Dash [Space]: %.1fs" % remaining
 		dash_label.modulate = Color(0.7, 0.7, 0.75, 1.0)
+
+
+func _on_touch_move_changed(new_vec: Vector2) -> void:
+	player.external_move_input = new_vec
+
+
+func _on_touch_dash_pressed() -> void:
+	if not is_game_over:
+		player.try_start_dash(player.external_move_input)
+
+
+func _on_bgm_button_pressed() -> void:
+	var gm: Node = _get_game_manager()
+	if gm == null:
+		return
+	var on: bool = bool(gm.call("toggle_bgm"))
+	bgm_button.text = "BGM: ON" if on else "BGM: OFF"
+
+
+func _on_pause_button_pressed() -> void:
+	if not is_game_over and pause_overlay.can_pause:
+		touch_controls.reset_touch_state()
+		player.external_move_input = Vector2.ZERO
+		pause_overlay.toggle_pause()
 
 
 func _on_game_timer_timeout() -> void:
@@ -369,6 +405,8 @@ func _on_game_timer_timeout() -> void:
 
 func _end_game(title_text: String) -> void:
 	is_game_over = true
+	touch_controls.reset_touch_state()
+	player.external_move_input = Vector2.ZERO
 	pause_overlay.can_pause = false
 	pause_overlay.set_paused(false)
 	level_up_overlay.visible = false

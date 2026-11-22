@@ -22,8 +22,8 @@ driver/output_latency=50
 
 [autoload]
 
-_mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
 GameManager="*res://scripts/game_manager.gd"
+_mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
 
 [display]
 
@@ -32,6 +32,10 @@ window/stretch/mode="canvas_items"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/godot_ai/plugin.cfg", "res://addons/gut/plugin.cfg")
+
+[gui]
+
+theme/custom_font="res://assets/fonts/NanumGothic.ttf"
 
 [rendering]
 

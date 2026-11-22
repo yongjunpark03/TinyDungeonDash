@@ -26,6 +26,7 @@ var bonus_max_hp: int = 0
 var move_speed_multiplier: float = 1.0
 var dash_cooldown_multiplier: float = 1.0
 var attack_interval_multiplier: float = 1.0
+var external_move_input: Vector2 = Vector2.ZERO
 var _walk_time: float = 0.0
 var _ghost_timer: float = 0.0
 
@@ -40,6 +41,8 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	var input_dir: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	if external_move_input != Vector2.ZERO:
+		input_dir = external_move_input
 	if input_dir != Vector2.ZERO:
 		facing_direction = input_dir.normalized()
 	if Input.is_action_just_pressed("ui_accept"):
