@@ -1,0 +1,16 @@
+# Godot 4+ cache & local credentials (contains export_credentials.cfg)
+.godot/
+
+# Auto-generated binary translations & Android Gradle templates
+*.translation
+/android/
+
+# Local build artifacts & test reports (keep build/.gdignore tracked)
+build/*
+!build/.gdignore
+reports/
+gdunit4_testadapter_v5/
+*.tmp
+run.log
+
+# IMPORTANT: NEVER ignore *.uid, *.import, or export_presets.cfg!

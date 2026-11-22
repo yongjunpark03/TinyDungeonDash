@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "godot-ai": {
+      "command": "uvx",
+      "args": [
+        "--isolated",
+        "--no-config",
+        "--from",
+        "godot-ai==4.4.2",
+        "godot-ai",
+        "attach",
+        "--port",
+        "8000",
+        "--ws-port",
+        "9500"
+      ],
+      "timeoutSeconds": 600
+    },
+    "context7": {
+      "url": "https://mcp.context7.com/mcp",
+      "timeoutSeconds": 60
+    }
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "version": 2,
+  "skills": {
+    "godot-4-api-pitfalls": {
+      "source": "ziva-sh/godot-skills",
+      "commit": "f3199da6413bc40bfb8733bd0189761c237c64cf",
+      "sourceType": "github",
+      "skillPath": "skills/godot-4-api-pitfalls/SKILL.md",
+      "computedHash": "b0ab0d6f89f423b40fdfa929aa3f8b94f30df1babb8f7e07e1caa68036ab6c5f"
+    },
+    "godot-control-layout": {
+      "source": "ziva-sh/godot-skills",
+      "commit": "f3199da6413bc40bfb8733bd0189761c237c64cf",
+      "sourceType": "github",
+      "skillPath": "skills/godot-control-layout/SKILL.md",
+      "computedHash": "963e6b7ad11401828dc08f8fe0499d533057af0e035d6b7b2e8b69de3b63c661"
+    },
+    "godot-export": {
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "c6ca6c41c839b68319ffc08430b99ab768debc32",
+      "sourceType": "github",
+      "skillPath": "skills/godot/godot-export/SKILL.md",
+      "computedHash": "9dae896af2918decf72f34de90234919c369ef8a0ba5349f008c8354a6385af6"
+    },
+    "godot-gdscript": {
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "c6ca6c41c839b68319ffc08430b99ab768debc32",
+      "sourceType": "github",
+      "skillPath": "skills/godot/godot-gdscript/SKILL.md",
+      "computedHash": "4115912dba21bd262930ab225979a74757eae97ced609c20d3370ddae61f8eaa"
+    },
+    "godot-gdscript-headless-testing": {
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "c6ca6c41c839b68319ffc08430b99ab768debc32",
+      "sourceType": "github",
+      "skillPath": "skills/godot/godot-gdscript-headless-testing/SKILL.md",
+      "computedHash": "9904c82a06e7ca132eb664c8110fa52ed4835ce01f9fe0a5942ee6e23d732d59"
+    },
+    "godot-nodes-scenes": {
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "c6ca6c41c839b68319ffc08430b99ab768debc32",
+      "sourceType": "github",
+      "skillPath": "skills/godot/godot-nodes-scenes/SKILL.md",
+      "computedHash": "7c9ce532ea7b2b16d862a3c94754c4e0b6a6f7a112b6b731b4fb1a3cb2e86021"
+    },
+    "godot-scene-organization": {
+      "source": "ziva-sh/godot-skills",
+      "commit": "f3199da6413bc40bfb8733bd0189761c237c64cf",
+      "sourceType": "github",
+      "skillPath": "skills/godot-scene-organization/SKILL.md",
+      "computedHash": "e5090a963bd2dafb626e6beb77b6c16a9bb896cd3324892f258dccac7eb95b61"
+    },
+    "godot-signals": {
+      "source": "ziva-sh/godot-skills",
+      "commit": "f3199da6413bc40bfb8733bd0189761c237c64cf",
+      "sourceType": "github",
+      "skillPath": "skills/godot-signals/SKILL.md",
+      "computedHash": "720e657831b50d62012d4ab77f32e5500e8d58aeed4275d6dab6a0b5ba49caf3"
+    },
+    "godot-signals-groups": {
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "c6ca6c41c839b68319ffc08430b99ab768debc32",
+      "sourceType": "github",
+      "skillPath": "skills/godot/godot-signals-groups/SKILL.md",
+      "computedHash": "3d07f3dd6dd7837254a5e7f0e9f0e678da74761c0284e7585c49c839a8e6ee88"
+    },
+    "godot-tilemaplayer": {
+      "source": "ziva-sh/godot-skills",
+      "commit": "f3199da6413bc40bfb8733bd0189761c237c64cf",
+      "sourceType": "github",
+      "skillPath": "skills/godot-tilemaplayer/SKILL.md",
+      "computedHash": "17781c674dd00cbd0de718c1c5dc8905b3fff4fe6eae0cbfe355e4c81c6f72cb"
+    },
+    "godot-verify": {
+      "source": "ziva-sh/godot-skills",
+      "commit": "f3199da6413bc40bfb8733bd0189761c237c64cf",
+      "sourceType": "github",
+      "skillPath": "skills/godot-verify/SKILL.md",
+      "computedHash": "a2797104b0466113ad0cd03f1dbb9d7b6aa82b27fea471b5352bc44a1ca631ee"
+    }
+  }
+}
