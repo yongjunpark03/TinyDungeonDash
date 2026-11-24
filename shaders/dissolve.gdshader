@@ -12,13 +12,17 @@ void fragment() {
 	vec4 tex = texture(TEXTURE, UV);
 	vec2 grid_uv = floor(UV * 16.0);
 	float noise = pixel_hash(grid_uv);
+	float vertex_flash = clamp(1.0 - COLOR.b, 0.0, 1.0);
+	float vertex_dissolve = clamp(1.0 - COLOR.a, 0.0, 1.0);
+	float active_flash = max(flash_amount, vertex_flash);
+	float active_dissolve = max(dissolve_amount, vertex_dissolve);
 	float alpha = tex.a;
-	vec3 rgb = mix(tex.rgb, vec3(1.0), flash_amount);
+	vec3 rgb = mix(tex.rgb, vec3(1.0), active_flash);
 
-	if (dissolve_amount > 0.0) {
-		if (noise < dissolve_amount) {
+	if (active_dissolve > 0.0) {
+		if (noise < active_dissolve) {
 			alpha = 0.0;
-		} else if (noise < dissolve_amount + 0.15) {
+		} else if (noise < active_dissolve + 0.15) {
 			rgb = edge_color.rgb;
 		}
 	}

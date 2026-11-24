@@ -9,6 +9,7 @@ signal collected(xp_amount: int, gem_position: Vector2)
 @export var pull_speed: float = 360.0
 
 var target: Node2D
+var release_callback: Callable = Callable()
 var _collected: bool = false
 
 
@@ -19,6 +20,13 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	step_magnet(delta)
+
+
+func activate(spawn_pos: Vector2, amount: int, target_node: Node2D) -> void:
+	position = spawn_pos
+	xp_value = amount
+	target = target_node
+	_collected = false
 
 
 func step_magnet(delta: float) -> bool:
@@ -39,7 +47,9 @@ func collect() -> bool:
 		return false
 	_collected = true
 	collected.emit(xp_value, global_position)
-	if is_inside_tree():
+	if release_callback.is_valid():
+		release_callback.call(self)
+	elif is_inside_tree():
 		queue_free()
 	return true
 

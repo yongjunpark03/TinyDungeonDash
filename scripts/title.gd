@@ -13,7 +13,10 @@ extends Node2D
 @onready var best_score_label: Label = $UI/CenterContainer/TitlePanel/MarginContainer/VBoxContainer/BestScoreLabel
 @onready var records_label: Label = $UI/CenterContainer/TitlePanel/MarginContainer/VBoxContainer/RecordsLabel
 @onready var last_run_label: Label = $UI/CenterContainer/TitlePanel/MarginContainer/VBoxContainer/LastRunLabel
-@onready var start_button: Button = $UI/CenterContainer/TitlePanel/MarginContainer/VBoxContainer/StartButton
+@onready var start_button: Button = $UI/CenterContainer/TitlePanel/MarginContainer/VBoxContainer/ButtonsRow/StartButton
+@onready var benchmark_button: Button = (
+	$UI/CenterContainer/TitlePanel/MarginContainer/VBoxContainer/ButtonsRow/BenchmarkButton
+)
 
 
 func _ready() -> void:
@@ -21,6 +24,7 @@ func _ready() -> void:
 	prev_hero_button.pressed.connect(_on_prev_hero_pressed)
 	next_hero_button.pressed.connect(_on_next_hero_pressed)
 	start_button.pressed.connect(_on_start_pressed)
+	benchmark_button.pressed.connect(_on_benchmark_pressed)
 	_refresh_records()
 	_refresh_hero_preview()
 	start_button.grab_focus()
@@ -71,3 +75,11 @@ func _on_start_pressed() -> void:
 		gm.call("start_game")
 	else:
 		get_tree().change_scene_to_file("res://scenes/main.tscn")
+
+
+func _on_benchmark_pressed() -> void:
+	var gm: Node = get_node_or_null("/root/GameManager")
+	if gm != null and gm.has_method("open_benchmark"):
+		gm.call("open_benchmark")
+	else:
+		get_tree().change_scene_to_file("res://scenes/benchmark.tscn")

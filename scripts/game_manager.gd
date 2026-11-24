@@ -8,6 +8,7 @@ signal hero_changed(hero_index: int, hero_name: String)
 const DEFAULT_SAVE_PATH: String = "user://high_score.cfg"
 const TITLE_SCENE_PATH: String = "res://scenes/title.tscn"
 const MAIN_SCENE_PATH: String = "res://scenes/main.tscn"
+const BENCHMARK_SCENE_PATH: String = "res://scenes/benchmark.tscn"
 const ACHIEVEMENT_DEFS: Array[Dictionary] = [
 	{"id": "first_blood", "title": "첫 사냥꾼 (First Blood)"},
 	{"id": "boss_slayer", "title": "네크로 슬레이어 (Boss Slayer)"},
@@ -36,6 +37,7 @@ var selected_hero_index: int = 0
 var unlocked_achievements: Array[String] = []
 var _keepalive_player: AudioStreamPlayer
 var _bgm_player: AudioStreamPlayer
+var _perf_overlay: PerfOverlay
 
 
 func _ready() -> void:
@@ -43,12 +45,17 @@ func _ready() -> void:
 	load_high_score()
 	_ensure_audio_keepalive()
 	_ensure_bgm_player()
+	_ensure_perf_overlay()
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	var key_event: InputEventKey = event as InputEventKey
-	if key_event != null and key_event.pressed and not key_event.echo and key_event.keycode == KEY_M:
+	if key_event == null or not key_event.pressed or key_event.echo:
+		return
+	if key_event.keycode == KEY_M:
 		toggle_bgm()
+	elif key_event.keycode == KEY_F3:
+		toggle_perf_overlay()
 
 
 func load_high_score() -> int:
@@ -186,6 +193,23 @@ func go_to_title() -> void:
 	get_tree().change_scene_to_file(TITLE_SCENE_PATH)
 
 
+func open_benchmark() -> void:
+	get_tree().paused = false
+	get_tree().change_scene_to_file(BENCHMARK_SCENE_PATH)
+
+
+func set_perf_overlay_visible(should_show: bool) -> void:
+	if _perf_overlay != null:
+		_perf_overlay.visible = should_show
+
+
+func toggle_perf_overlay() -> bool:
+	if _perf_overlay == null:
+		return false
+	_perf_overlay.visible = not _perf_overlay.visible
+	return _perf_overlay.visible
+
+
 func _ensure_audio_keepalive() -> void:
 	if _keepalive_player != null:
 		return
@@ -203,3 +227,10 @@ func _ensure_bgm_player() -> void:
 	add_child(_bgm_player)
 	_bgm_player.play()
 	_bgm_player.stream_paused = not bgm_enabled
+
+
+func _ensure_perf_overlay() -> void:
+	if _perf_overlay != null:
+		return
+	_perf_overlay = PerfOverlay.new()
+	add_child(_perf_overlay)

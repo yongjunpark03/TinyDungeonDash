@@ -9,6 +9,7 @@ signal player_hit(damage: int)
 
 var direction: Vector2 = Vector2.RIGHT
 var dungeon_map: DungeonMap
+var release_callback: Callable = Callable()
 var _time_left: float = 3.2
 var _consumed: bool = false
 
@@ -32,19 +33,35 @@ func _physics_process(delta: float) -> void:
 		consume()
 
 
+func activate(origin: Vector2, dir: Vector2, map_ref: DungeonMap) -> void:
+	position = origin
+	direction = dir.normalized() if dir != Vector2.ZERO else Vector2.DOWN
+	rotation = 0.0
+	dungeon_map = map_ref
+	_time_left = lifetime
+	_consumed = false
+
+
 func try_hit_player(player: Player) -> bool:
 	if _consumed or player == null:
 		return false
 	_consumed = true
 	player_hit.emit(damage)
-	if is_inside_tree():
-		queue_free()
+	_finish()
 	return true
 
 
 func consume() -> void:
+	if _consumed:
+		return
 	_consumed = true
-	if is_inside_tree():
+	_finish()
+
+
+func _finish() -> void:
+	if release_callback.is_valid():
+		release_callback.call(self)
+	elif is_inside_tree():
 		queue_free()
 
 

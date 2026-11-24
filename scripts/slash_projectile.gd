@@ -10,6 +10,7 @@ signal enemy_hit(enemy: Enemy, damage: int, hit_position: Vector2)
 @export var max_pierce: int = 2
 
 var direction: Vector2 = Vector2.RIGHT
+var release_callback: Callable = Callable()
 var _time_left: float = 0.42
 var _hit_count: int = 0
 var _hit_enemies: Array[Enemy] = []
@@ -25,7 +26,19 @@ func _physics_process(delta: float) -> void:
 	position += direction * speed * delta
 	_time_left -= delta
 	if _time_left <= 0.0:
-		queue_free()
+		_finish()
+
+
+func activate(origin: Vector2, dir: Vector2, dmg: int, pierce: int, scale_mult: float) -> void:
+	position = origin
+	direction = dir.normalized() if dir != Vector2.ZERO else Vector2.RIGHT
+	rotation = direction.angle()
+	damage = dmg
+	max_pierce = pierce
+	scale = Vector2.ONE * scale_mult
+	_time_left = lifetime
+	_hit_count = 0
+	_hit_enemies.clear()
 
 
 func try_hit_enemy(enemy: Enemy) -> bool:
@@ -36,9 +49,16 @@ func try_hit_enemy(enemy: Enemy) -> bool:
 	_hit_enemies.append(enemy)
 	_hit_count += 1
 	enemy_hit.emit(enemy, damage, enemy.global_position)
-	if _hit_count >= max_pierce and is_inside_tree():
-		queue_free()
+	if _hit_count >= max_pierce:
+		_finish()
 	return true
+
+
+func _finish() -> void:
+	if release_callback.is_valid():
+		release_callback.call(self)
+	elif is_inside_tree():
+		queue_free()
 
 
 func _on_area_entered(area: Area2D) -> void:

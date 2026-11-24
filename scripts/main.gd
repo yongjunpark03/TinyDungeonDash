@@ -33,8 +33,13 @@ var boss_spawn_sfx: AudioStreamWAV
 var orb_cast_sfx: AudioStreamWAV
 var director: WaveDirector = WaveDirector.new()
 var upgrade_manager: UpgradeManager = UpgradeManager.new()
+var enemy_grid: SpatialGrid2D = SpatialGrid2D.new(96.0)
 var _spawned_enemies: int = 0
 var _active_boss: Enemy
+var _slash_pool: NodePool = NodePool.new()
+var _orb_pool: NodePool = NodePool.new()
+var _xp_pool: NodePool = NodePool.new()
+var _spark_burst: MultiMeshBurst2D
 
 @onready var dungeon_map: DungeonMap = $DungeonMap
 @onready var player: Player = $Player
@@ -115,6 +120,16 @@ func _ready() -> void:
 	_update_wave_label()
 	_update_level_label()
 	_update_torch_vignette()
+	if slash_scene != null:
+		_slash_pool.setup(slash_scene, self, 12)
+	if magic_orb_scene != null:
+		_orb_pool.setup(magic_orb_scene, self, 24)
+	if xp_gem_scene != null:
+		_xp_pool.setup(xp_gem_scene, self, 20)
+	_spark_burst = MultiMeshBurst2D.new()
+	_spark_burst.setup(HIT_SPARK_TEXTURE, Vector2(18.0, 18.0))
+	_spark_burst.z_index = 20
+	add_child(_spark_burst)
 	_spawn_coin()
 	_spawn_enemy()
 	game_timer.start()
@@ -124,6 +139,7 @@ func _process(delta: float) -> void:
 	_update_torch_vignette()
 	if is_game_over:
 		return
+	_rebuild_enemy_grid()
 	player.step_attack_timer(delta, _find_nearest_enemy_direction())
 	if director.tick(delta) or director.combo_count > 0:
 		_update_wave_label()
@@ -198,25 +214,31 @@ func _spawn_coin_burst(burst_position: Vector2) -> void:
 func _spawn_xp_gem(spawn_pos: Vector2, xp_amount: int) -> void:
 	if xp_gem_scene == null or is_game_over:
 		return
-	var gem: XpGem = xp_gem_scene.instantiate() as XpGem
-	gem.position = spawn_pos
-	gem.xp_value = xp_amount
-	gem.target = player
-	gem.collected.connect(_on_xp_gem_collected)
-	add_child.call_deferred(gem)
+	var gem: XpGem = _xp_pool.acquire() as XpGem
+	if gem == null:
+		return
+	gem.release_callback = _xp_pool.release
+	if not gem.collected.is_connected(_on_xp_gem_collected):
+		gem.collected.connect(_on_xp_gem_collected)
+	gem.activate(spawn_pos, xp_amount, player)
 
 
 func _on_player_attack_triggered(origin: Vector2, aim_direction: Vector2, damage: int) -> void:
 	if slash_scene == null or is_game_over:
 		return
-	var slash: SlashProjectile = slash_scene.instantiate() as SlashProjectile
-	slash.position = origin + aim_direction * 22.0
-	slash.direction = aim_direction
-	slash.damage = damage
-	slash.max_pierce = 2 + upgrade_manager.bonus_pierce
-	slash.scale = Vector2.ONE * upgrade_manager.slash_scale_bonus
-	slash.enemy_hit.connect(_on_slash_enemy_hit)
-	add_child.call_deferred(slash)
+	var slash: SlashProjectile = _slash_pool.acquire() as SlashProjectile
+	if slash == null:
+		return
+	slash.release_callback = _slash_pool.release
+	if not slash.enemy_hit.is_connected(_on_slash_enemy_hit):
+		slash.enemy_hit.connect(_on_slash_enemy_hit)
+	slash.activate(
+		origin + aim_direction * 22.0,
+		aim_direction,
+		damage,
+		2 + upgrade_manager.bonus_pierce,
+		upgrade_manager.slash_scale_bonus
+	)
 	_play_sfx(slash_sfx)
 
 
@@ -252,12 +274,13 @@ func _on_boss_cast_orbs(origin: Vector2, directions: Array[Vector2]) -> void:
 	if magic_orb_scene == null or is_game_over:
 		return
 	for dir in directions:
-		var orb: MagicOrb = magic_orb_scene.instantiate() as MagicOrb
-		orb.position = origin
-		orb.direction = dir
-		orb.dungeon_map = dungeon_map
-		orb.player_hit.connect(_on_player_hit)
-		add_child.call_deferred(orb)
+		var orb: MagicOrb = _orb_pool.acquire() as MagicOrb
+		if orb == null:
+			continue
+		orb.release_callback = _orb_pool.release
+		if not orb.player_hit.is_connected(_on_player_hit):
+			orb.player_hit.connect(_on_player_hit)
+		orb.activate(origin, dir, dungeon_map)
 	_play_sfx(orb_cast_sfx)
 
 
@@ -439,33 +462,36 @@ func _on_title_pressed() -> void:
 		get_tree().change_scene_to_file("res://scenes/title.tscn")
 
 
-func _find_nearest_enemy_direction() -> Vector2:
-	var best_dir: Vector2 = player.facing_direction
-	var best_dist_sq: float = 420.0 * 420.0
+func _rebuild_enemy_grid() -> void:
+	enemy_grid.clear()
 	for node in get_tree().get_nodes_in_group("enemies"):
 		var enemy: Enemy = node as Enemy
-		if enemy == null or enemy.is_dying:
-			continue
-		var delta_pos: Vector2 = enemy.global_position - player.global_position
-		var dist_sq: float = delta_pos.length_squared()
-		if dist_sq > 0.0 and dist_sq < best_dist_sq:
-			best_dist_sq = dist_sq
-			best_dir = delta_pos.normalized()
-	return best_dir
+		if enemy != null and not enemy.is_dying:
+			enemy_grid.insert(enemy, enemy.global_position)
+
+
+func _is_targetable_enemy(node: Node2D) -> bool:
+	var enemy: Enemy = node as Enemy
+	return enemy != null and not enemy.is_dying and enemy.global_position != player.global_position
+
+
+func _find_nearest_enemy_direction() -> Vector2:
+	var nearest: Enemy = enemy_grid.find_nearest_node2d(
+		player.global_position,
+		420.0,
+		_is_targetable_enemy
+	) as Enemy
+	if nearest != null:
+		var delta_pos: Vector2 = nearest.global_position - player.global_position
+		if delta_pos != Vector2.ZERO:
+			return delta_pos.normalized()
+	return player.facing_direction
 
 
 func _spawn_hit_spark(world_pos: Vector2) -> void:
-	var spark: Sprite2D = Sprite2D.new()
-	spark.texture = HIT_SPARK_TEXTURE
-	spark.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	spark.global_position = world_pos
-	spark.scale = Vector2(2.0, 2.0)
-	add_child(spark)
-	var tween: Tween = spark.create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(spark, "scale", Vector2(3.2, 3.2), 0.16)
-	tween.tween_property(spark, "modulate:a", 0.0, 0.16)
-	tween.chain().tween_callback(spark.queue_free)
+	if _spark_burst == null:
+		return
+	_spark_burst.emit_burst(world_pos, 5, Color(1.0, 0.92, 0.5, 1.0))
 
 
 func _spawn_floating_text(world_pos: Vector2, text_value: String, color: Color) -> void:

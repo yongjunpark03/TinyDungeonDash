@@ -197,20 +197,14 @@ func _hits_wall(center_pos: Vector2) -> bool:
 func _trigger_hit_flash() -> void:
 	if not is_inside_tree() or sprite == null:
 		return
-	var mat: ShaderMaterial = sprite.material as ShaderMaterial
-	if mat == null:
-		return
-	mat.set_shader_parameter("flash_amount", 1.0)
+	sprite.self_modulate.b = 0.0
 	var tween: Tween = create_tween()
 	tween.tween_method(_set_flash_amount, 1.0, 0.0, 0.14)
 
 
 func _set_flash_amount(value: float) -> void:
-	if sprite == null:
-		return
-	var mat: ShaderMaterial = sprite.material as ShaderMaterial
-	if mat != null:
-		mat.set_shader_parameter("flash_amount", value)
+	if sprite != null:
+		sprite.self_modulate.b = 1.0 - clampf(value, 0.0, 1.0)
 
 
 func _start_death_dissolve() -> void:
@@ -225,11 +219,8 @@ func _start_death_dissolve() -> void:
 
 
 func _set_dissolve_amount(value: float) -> void:
-	if sprite == null:
-		return
-	var mat: ShaderMaterial = sprite.material as ShaderMaterial
-	if mat != null:
-		mat.set_shader_parameter("dissolve_amount", value)
+	if sprite != null:
+		sprite.self_modulate.a = 1.0 - clampf(value, 0.0, 1.0)
 
 
 func _on_body_entered(body: Node2D) -> void:
